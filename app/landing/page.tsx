@@ -3,7 +3,7 @@ import { ArrowRight, TrendingUp, Plane, BarChart3, Mail, Linkedin, Facebook, Ins
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-50">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-center">
@@ -26,7 +26,7 @@ export default function LandingPage() {
             </div>
             <h1 className="text-6xl md:text-7xl font-bold text-slate-900 text-balance leading-tight">
               Take Control of Your
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"> Finances</span>
+              <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"> Finances</span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-600 text-balance max-w-3xl mx-auto leading-relaxed">
               Track spending, split bills effortlessly, and get AI-powered insights. Your all-in-one financial companion.
@@ -61,7 +61,7 @@ export default function LandingPage() {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Feature 1 */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 space-y-4 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
               <TrendingUp className="w-7 h-7 text-white" />
             </div>
             <h3 className="text-2xl font-bold text-slate-900">Smart Analytics</h3>
@@ -72,18 +72,18 @@ export default function LandingPage() {
 
           {/* Feature 2 */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 space-y-4 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Shield className="w-7 h-7 text-white" />
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Plane className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900">Bank-Level Security</h3>
+            <h3 className="text-2xl font-bold text-slate-900">Integrated Travel Planning</h3>
             <p className="text-slate-600 leading-relaxed">
-              Your financial data is protected with enterprise-grade encryption and security protocols you can trust.
+              Connect your travel goals directly to your real-time budget. FINIX provides smart insights to help you save for your trip faster. Receive AI-powered recommendations to optimize your itinerary and costs.
             </p>
           </div>
 
           {/* Feature 3 */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 space-y-4 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
               <BarChart3 className="w-7 h-7 text-white" />
             </div>
             <h3 className="text-2xl font-bold text-slate-900">Bill Splitting</h3>
@@ -96,7 +96,7 @@ export default function LandingPage() {
 
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="bg-gradient-to-r from-purple-500 to-pink-600 rounded-3xl p-12 md:p-16 text-center space-y-8 shadow-2xl">
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl p-12 md:p-16 text-center space-y-8 shadow-2xl">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-4">
             <Target className="w-10 h-10 text-white" />
           </div>
@@ -130,7 +130,7 @@ export default function LandingPage() {
               href="mailto:contact@finix.com"
               className="flex items-center gap-3 group"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-200">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-200">
                 <Mail className="w-6 h-6 text-white" />
               </div>
               <div className="text-left">
@@ -148,7 +148,7 @@ export default function LandingPage() {
               rel="noopener noreferrer"
               className="flex items-center gap-3 group"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-200">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-200">
                 <Linkedin className="w-6 h-6 text-white" />
               </div>
               <div className="text-left">
@@ -165,7 +165,7 @@ export default function LandingPage() {
                 href="https://facebook.com/finix"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
+                className="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
                 aria-label="Facebook"
               >
                 <Facebook className="w-6 h-6 text-white" />
@@ -174,7 +174,7 @@ export default function LandingPage() {
                 href="https://instagram.com/finix"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
+                className="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
                 aria-label="Instagram"
               >
                 <Instagram className="w-6 h-6 text-white" />
@@ -188,7 +188,7 @@ export default function LandingPage() {
       <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-xl text-white">FINIX</span>
