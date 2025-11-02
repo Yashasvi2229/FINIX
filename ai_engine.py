@@ -12,8 +12,8 @@ from decimal import Decimal
 from typing import List, Dict, Optional
 from sqlalchemy.orm import Session
 
-from backend.models import Transaction, TravelGoal
-from backend.schemas import SavingsSuggestion, AISuggestionResponse
+from models import Transaction, TravelGoal
+from schemas import SavingsSuggestion, AISuggestionResponse
 
 
 class AIEngine:

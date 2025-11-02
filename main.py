@@ -14,15 +14,15 @@ import os
 # Load environment variables from .env file
 load_dotenv()
 
-from backend.database import get_db, init_db, engine
-from backend.models import Base, User, Transaction, TravelGoal
-from backend.schemas import (
+from database import get_db, init_db, engine
+from models import Base, User, Transaction, TravelGoal
+from schemas import (
     UserCreate, UserResponse,
     TransactionCreate, TransactionResponse,
     TravelGoalCreate, TravelGoalUpdate, TravelGoalResponse,
     AISuggestionResponse
 )
-from backend.ai_engine import AIEngine
+from ai_engine import AIEngine
 
 # Create FastAPI app instance
 app = FastAPI(
@@ -74,7 +74,7 @@ async def startup_event():
 @app.get("/health")
 async def health_check():
     """Health check endpoint to verify API is running."""
-    from backend.database import check_db_connection, SKIP_DB_INIT
+    from database import check_db_connection, SKIP_DB_INIT
     
     db_status = "connected" if check_db_connection() else "disconnected"
     if SKIP_DB_INIT:
@@ -455,7 +455,7 @@ async def get_ai_suggestions(user_id: int, db: Session = Depends(get_db)):
         engine = get_ai_engine()
         if engine is None:
             # Create engine in mock mode (no API key required)
-            from backend.ai_engine import AIEngine
+            from ai_engine import AIEngine
             engine = AIEngine(mock_mode=True)
         
         # Generate AI suggestions
