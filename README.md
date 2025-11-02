@@ -1,26 +1,79 @@
-# FINIX Backend API
+# FINIX - AI-Powered Financial & Travel Platform
 
-Production-ready FastAPI backend for FINIX - AI-Powered Financial & Travel Platform.
+FINIX is an all-in-one platform designed to shift personal finance from passive expense tracking to proactive, goal-oriented savings and intelligent travel planning. The platform combines budgeting, expense splitting, and trip planning into a single, intelligent application.
+
+## 🎯 Core Innovation
+
+FINIX serves as the **Single Source of Truth** for a user's financial life, with an AI Engine that generates personalized, context-aware savings strategies by directly comparing real-time spending habits against concrete travel goals.
+
+**Value Proposition**: Unification of three distinct functionalities (budgeting, expense splitting, trip planning) into a single, intelligent application - **"1 App Replaces 3"**.
 
 ## 🏗️ Architecture
 
-The backend is organized into logical, modular components:
+This is a full-stack application with separate frontend and backend components:
 
-- **`database.py`**: PostgreSQL connection, session management, and database initialization
-- **`models.py`**: SQLAlchemy ORM models (User, Transaction, TravelGoal)
-- **`schemas.py`**: Pydantic schemas for request/response validation
-- **`ai_engine.py`**: AI Engine ("Central Brain") - Groq API integration for personalized suggestions
-- **`main.py`**: FastAPI application with all endpoints and CORS configuration
+### Backend (Python/FastAPI)
+- **Technology**: FastAPI, PostgreSQL, SQLAlchemy, Groq API
+- **Location**: Root directory (`main.py`, `models.py`, `database.py`, etc.)
+- **Purpose**: RESTful API server handling database operations and AI-powered suggestions
 
-## 🚀 Quick Start
+### Frontend (Next.js/React)
+- **Technology**: Next.js 16, React 19, TypeScript, Tailwind CSS
+- **Location**: Root directory with Next.js structure (`app/`, `components/`, etc.)
+- **Purpose**: Modern web interface for financial dashboard, expense tracking, and travel planning
 
-### Prerequisites
+## 🚀 Features
 
+### Financial Management
+- **Smart Analytics**: Real-time insights into spending patterns with AI-powered recommendations
+- **Expense Tracking**: Comprehensive expense management and categorization
+- **Wallet Management**: Multi-wallet support with balance tracking
+- **Budget Tracking**: Monthly budget monitoring and alerts
+
+### Social Features
+- **FairShare**: Split expenses with friends and track shared costs
+
+### Travel Planning
+- **Travel Goals**: Set savings targets for specific trips
+- **AI-Powered Suggestions**: Get personalized savings strategies that link current spending to travel goals
+
+### User Experience
+- **Dark Mode**: Beautiful dark and light themes
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Smart Suggestions**: AI-powered recommendations to optimize finances
+
+## 🛠️ Tech Stack
+
+### Backend
+- **Framework**: FastAPI (Python)
+- **Database**: PostgreSQL with SQLAlchemy ORM
+- **AI Engine**: Groq API (with mock mode fallback)
+- **Data Processing**: Pandas
+
+### Frontend
+- **Framework**: Next.js 16 (App Router)
+- **UI Library**: React 19
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4
+- **UI Components**: shadcn/ui (Radix UI primitives)
+- **Charts**: Recharts
+- **Forms**: React Hook Form + Zod validation
+
+## 📋 Prerequisites
+
+### For Backend
 - Python 3.9+
 - PostgreSQL 12+
 - Groq API key
 
-### Installation
+### For Frontend
+- Node.js 18.17+ (LTS recommended)
+- pnpm (recommended) or npm/yarn
+- Git 2.0+
+
+## 🚀 Quick Start
+
+### Backend Setup
 
 1. **Create virtual environment:**
    ```bash
@@ -28,18 +81,20 @@ The backend is organized into logical, modular components:
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-2. **Install dependencies:**
+2. **Install Python dependencies:**
    ```bash
-   cd backend
    pip install -r requirements.txt
    ```
 
 3. **Set up environment variables:**
    ```bash
-   # Create .env file based on the template
-   # On Windows: copy env_template.txt .env
-   # On Linux/Mac: cp env_template.txt .env
-   # Edit .env with your database credentials and Groq API key
+   # Copy the template
+   # Windows: copy env_template.txt .env
+   # Linux/Mac: cp env_template.txt .env
+   
+   # Edit .env with your credentials:
+   # DATABASE_URL=postgresql://user:password@host:port/database
+   # GROQ_API_KEY=your_api_key_here
    ```
 
 4. **Create PostgreSQL database:**
@@ -47,22 +102,82 @@ The backend is organized into logical, modular components:
    CREATE DATABASE finix_db;
    ```
 
-5. **Run database migrations (auto-created on startup):**
-   The database tables are automatically created when you start the server.
-
-6. **Start the server:**
+5. **Start the backend server:**
    ```bash
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
 
-   Or using Python:
-   ```bash
-   python -m uvicorn main:app --reload
-   ```
-
-7. **Access API documentation:**
+   The API will be available at:
+   - API: http://localhost:8000
    - Swagger UI: http://localhost:8000/docs
    - ReDoc: http://localhost:8000/redoc
+
+### Frontend Setup
+
+1. **Install Node.js dependencies:**
+   ```bash
+   # Using pnpm (recommended)
+   pnpm install
+   
+   # OR using npm
+   npm install
+   
+   # OR using yarn
+   yarn install
+   ```
+
+2. **Set up environment variables (optional):**
+   ```bash
+   # Copy the example file (if it exists)
+   # Windows: Copy-Item .env.example .env.local
+   # Linux/Mac: cp .env.example .env.local
+   
+   # Configure API endpoint if backend is on different port
+   # NEXT_PUBLIC_API_URL=http://localhost:8000
+   ```
+
+3. **Start the development server:**
+   ```bash
+   pnpm dev
+   # OR: npm run dev
+   # OR: yarn dev
+   ```
+
+   The frontend will be available at: http://localhost:3000
+
+## 📁 Project Structure
+
+```
+finix/
+├── # Backend Files
+├── main.py                 # FastAPI entry point
+├── models.py              # SQLAlchemy ORM models
+├── schemas.py             # Pydantic schemas
+├── database.py            # Database connection & session management
+├── ai_engine.py           # AI Engine ("Central Brain")
+├── requirements.txt       # Python dependencies
+├── env_template.txt       # Environment variables template
+│
+├── # Frontend Files
+├── app/                   # Next.js App Router
+│   ├── dashboard/        # Dashboard pages
+│   │   ├── expenses/     # Expenses page
+│   │   ├── fairshare/    # FairShare page
+│   │   ├── travel/       # Travel page
+│   │   ├── wallet/       # Wallet page
+│   │   ├── suggestions/  # Smart Suggestions page
+│   │   └── page.tsx      # Dashboard overview
+│   ├── landing/          # Landing page
+│   ├── layout.tsx        # Root layout
+│   ├── page.tsx          # Root page
+│   └── globals.css       # Global styles
+├── components/           # React components
+├── lib/                  # Utility functions
+├── public/              # Static assets
+├── package.json         # Node.js dependencies
+├── next.config.mjs      # Next.js configuration
+└── tsconfig.json        # TypeScript configuration
+```
 
 ## 📋 API Endpoints
 
@@ -87,18 +202,20 @@ The backend is organized into logical, modular components:
 ### AI Suggestions (Core Innovation)
 - `GET /suggestions/{user_id}` - Get AI-generated personalized savings suggestions
 
+See the [API documentation](http://localhost:8000/docs) for detailed request/response schemas.
+
 ## 🤖 AI Engine
 
-The AI Engine (`ai_engine.py`) is the "Central Brain" of FINIX:
+The AI Engine (`ai_engine.py`) is the **"Central Brain"** of FINIX:
 
-1. **Data Retrieval**: Fetches user transactions and travel goals
-2. **Processing (Pandas)**: Analyzes spending patterns, calculates metrics
-3. **LLM Prompting (Groq)**: Generates personalized savings strategies
-4. **Proactive Insight**: Returns actionable suggestions linking expenses to travel goals
+1. **Data Retrieval**: Fetches user transactions and travel goals from PostgreSQL
+2. **Processing (Pandas)**: Analyzes spending patterns, calculates metrics (average spending, non-essential spending, savings shortfall)
+3. **LLM Prompting (Groq)**: Generates personalized savings strategies linking current expenses to travel goals
+4. **Proactive Insight**: Returns actionable suggestions that accelerate travel timeline
 
 ### Fallback Mode
 
-If the Groq API is unavailable or fails, the engine automatically falls back to mock suggestions (useful for Round 1 Demo/MVP).
+If the Groq API is unavailable or fails, the engine automatically falls back to mock suggestions (useful for Round 1 Demo/MVP without live LLM).
 
 ## 🗄️ Database Schema
 
@@ -109,7 +226,7 @@ If the Groq API is unavailable or fails, the engine automatically falls back to 
 - `created_at`, `updated_at`
 
 ### Transactions Table
-- `id` (PK)`
+- `id` (PK)
 - `user_id` (FK)
 - `amount`
 - `category`
@@ -130,92 +247,97 @@ If the Groq API is unavailable or fails, the engine automatically falls back to 
 
 ## 🔧 Configuration
 
-### Environment Variables
-
+### Backend Environment Variables
 ```bash
 DATABASE_URL=postgresql://user:password@host:port/database
 GROQ_API_KEY=your_api_key_here
 ```
 
-### Database URL Format
-```
-postgresql://[user[:password]@][host][:port][/database]
-```
-
-## 📦 Development
-
-### Running Tests
-
+### Frontend Environment Variables (Optional)
 ```bash
-# Install test dependencies
-pip install pytest pytest-asyncio httpx
-
-# Run tests
-pytest
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-### Code Structure Best Practices
+## 🐛 Troubleshooting
 
-- Models (`models.py`): Database schema definitions
-- Schemas (`schemas.py`): API validation and serialization
-- Database (`database.py`): Connection management (single responsibility)
-- AI Engine (`ai_engine.py`): Isolated AI/ML logic
-- Main (`main.py`): API routes and business logic orchestration
+### Backend Issues
+
+**Database Connection Failed:**
+- Verify PostgreSQL is running
+- Check `DATABASE_URL` in `.env` file
+- Ensure database exists: `CREATE DATABASE finix_db;`
+
+**AI Suggestions Not Working:**
+- Check `GROQ_API_KEY` in `.env` file
+- Engine will fallback to mock suggestions if API key is missing
+- Check API rate limits and quotas
+
+### Frontend Issues
+
+**Port Already in Use:**
+```bash
+# Kill process on port 3000
+# Windows: netstat -ano | findstr :3000
+# macOS/Linux: lsof -ti:3000 | xargs kill -9
+
+# Or use different port
+pnpm dev -- -p 3001
+```
+
+**Module Not Found:**
+```bash
+# Clear Next.js cache
+rm -rf .next  # or Remove-Item -Recurse -Force .next on Windows
+pnpm install
+pnpm dev
+```
+
+**API Connection Issues:**
+- Verify backend is running on port 8000
+- Check `NEXT_PUBLIC_API_URL` in `.env.local`
+- Check browser console for CORS errors
 
 ## 🚢 Production Deployment
 
-### Recommended Settings
-
-1. **Database Connection Pooling**: Already configured in `database.py`
-2. **Environment Variables**: Use secure secret management
-3. **CORS**: Update allowed origins for production domain
-4. **Error Handling**: Comprehensive error handling implemented
-5. **Logging**: Add structured logging for production monitoring
-
-### Example Production Command
-
+### Backend
 ```bash
 uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
 ```
 
-## 📝 API Response Examples
-
-### Get AI Suggestions Response
-
-```json
-{
-  "user_id": 1,
-  "travel_goal_name": "Trip to Japan",
-  "target_amount": 5000.00,
-  "current_saved": 1500.00,
-  "remaining_amount": 3500.00,
-  "average_monthly_spending": 2500.00,
-  "non_essential_spending": 800.00,
-  "months_to_goal_current": 14.0,
-  "months_to_goal_optimized": 9.5,
-  "suggestions": [
-    {
-      "title": "Reduce Entertainment Spending",
-      "description": "Cutting entertainment expenses by 30% could save $240/month...",
-      "potential_savings": 240.00,
-      "impact": "Saves 4.5 months toward your trip",
-      "category": "Entertainment"
-    }
-  ],
-  "generated_at": "2024-01-15T10:30:00Z"
-}
+### Frontend
+```bash
+pnpm build
+pnpm start
 ```
+
+**Recommended Settings:**
+- Use environment variables for all secrets
+- Enable HTTPS in production
+- Configure CORS for production domain
+- Set up database connection pooling
+- Implement authentication/authorization
 
 ## 🔒 Security Notes
 
 - Always use environment variables for sensitive data (API keys, database passwords)
+- Never commit `.env` files to version control
 - Implement authentication/authorization before production deployment
 - Use HTTPS in production
-- Validate and sanitize all user inputs (handled by Pydantic schemas)
+- Validate and sanitize all user inputs (handled by Pydantic schemas in backend)
 
 ## 📚 Additional Resources
 
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://react.dev)
 - [SQLAlchemy Documentation](https://docs.sqlalchemy.org/)
 - [Groq API Documentation](https://console.groq.com/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
+## 📄 License
+
+This project is private and proprietary.
+
+---
+
+**Built with ❤️ using FastAPI, Next.js, React, and TypeScript**

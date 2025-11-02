@@ -7,11 +7,11 @@
 .env.production
 .env.development
 *.env
+!.env.example
 # Keep env_template.txt in the repo (it's a template, not actual secrets)
-# !env_template.txt
 
 # ============================================
-# Python
+# Python (Backend)
 # ============================================
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -72,6 +72,38 @@ env.bak/
 venv.bak/
 .venv/
 .virtualenv/
+
+# ============================================
+# Node.js / Next.js (Frontend)
+# ============================================
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+
+# Production
+/build
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
 
 # ============================================
 # IDEs and Editors
@@ -166,7 +198,7 @@ logs/
 *.log.*
 
 # ============================================
-# FastAPI / Uvicorn
+# FastAPI / Uvicorn (Backend)
 # ============================================
 *.pid
 .pytest_cache/
@@ -189,14 +221,10 @@ logs/
 *.temp
 *.bak
 *.backup
-*.swp
-*.swo
 
 # ============================================
 # Project Specific
 # ============================================
-# env_template.txt is kept in the repo (see Environment Variables section above)
-
 # Test files that might contain sensitive data
 # Uncomment the line below if your test files contain hardcoded API keys or secrets
 # test_*.py
@@ -245,4 +273,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
