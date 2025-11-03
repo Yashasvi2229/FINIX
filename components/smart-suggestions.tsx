@@ -1,185 +1,171 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Zap, ArrowRight, Lightbulb, AlertCircle, Loader2 } from "lucide-react"
+import { Zap, ArrowRight, Lightbulb, AlertCircle, RefreshCcw } from "lucide-react"
 import { useFinixData } from "@/lib/data-context"
-import { calculateSuggestions, type SavingsSuggestion } from "@/lib/api-client"
-import Link from "next/link"
+import { calculateSuggestions } from "@/lib/api-client"
+
+interface SmartSuggestion {
+  title: string
+  description: string
+  savings: number
+  category: string
+  icon?: "alert" | "bulb" | "zap"
+}
 
 export default function SmartSuggestions() {
   const { transactions, travelGoal } = useFinixData()
-  const [suggestions, setSuggestions] = useState<SavingsSuggestion[]>([])
+  const [suggestions, setSuggestions] = useState<SmartSuggestion[]>([])
+  const [totalSavings, setTotalSavings] = useState(0)
+  const [activeCount, setActiveCount] = useState(0)
+  const [dismissedCount, setDismissedCount] = useState(0)
+  const [implementationProgress, setImplementationProgress] = useState("0/0")
+  const [lastUpdated, setLastUpdated] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [mounted, setMounted] = useState(false)
-
-  // Fix hydration issue - only run on client
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   useEffect(() => {
-    if (!mounted) return // Don't run until client-side hydration is complete
-    
-    const fetchSuggestions = async () => {
-      if (!travelGoal || transactions.length === 0) {
-        setSuggestions([])
-        setError(null)
-        return
-      }
+    const analyzeSuggestions = async () => {
+      if (!transactions.length || !travelGoal) return
 
       setLoading(true)
-      setError(null)
-
       try {
-        console.log("Fetching suggestions with:", { 
-          transactionCount: transactions.length, 
-          travelGoal: travelGoal.name,
-          targetAmount: travelGoal.target_amount 
-        })
         const response = await calculateSuggestions(transactions, travelGoal, 1)
-        console.log("Suggestions response:", response)
-        if (response && response.suggestions) {
-          setSuggestions(response.suggestions.slice(0, 3)) // Show top 3
-        } else {
-          setError("No suggestions returned from API")
-        }
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Failed to load suggestions"
-        setError(errorMessage)
-        console.error("Error fetching suggestions:", err)
-        setSuggestions([]) // Clear suggestions on error
+        
+        // Transform API response into our suggestion format
+        const transformedSuggestions: SmartSuggestion[] = response.suggestions.map((s: any) => ({
+          title: s.title,
+          description: s.description,
+          savings: parseFloat(s.potential_savings || "0"),
+          category: s.category,
+          icon: getCategoryIcon(s.category) as "alert" | "bulb" | "zap"
+        }))
+
+        setSuggestions(transformedSuggestions)
+        
+        // Calculate totals
+        const monthly = transformedSuggestions.reduce((sum, s) => sum + s.savings, 0)
+        setTotalSavings(monthly)
+        setActiveCount(transformedSuggestions.length)
+        setImplementationProgress(`${Math.floor(Math.random() * 3)}/6`) // This would come from actual tracking
+        setLastUpdated(new Date().toLocaleTimeString())
+      } catch (error) {
+        console.error("Failed to load suggestions:", error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchSuggestions()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted, transactions.length, travelGoal?.name, travelGoal?.target_amount, travelGoal?.current_saved])
+    analyzeSuggestions()
+  }, [transactions, travelGoal])
 
-  const displaySuggestions = suggestions.length > 0 ? suggestions : [
-    {
-      title: "Add Transactions & Travel Goal",
-      description: "Add transactions and set a travel goal to see AI-powered savings suggestions",
-      potential_savings: 0,
-      impact: "Get started",
-      category: "Setup",
-    },
-    {
-      title: "Track Your Spending",
-      description: "Start adding transactions on the Wallet or Expenses page",
-      potential_savings: 0,
-      impact: "Learn more",
-      category: "Getting Started",
-    },
-  ]
-
-  // Don't render until mounted to avoid hydration issues
-  if (!mounted) {
-    return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Zap className="w-5 h-5 text-purple-600" />
-          <h2 className="font-semibold text-foreground">Smart Suggestions</h2>
-        </div>
-        <p className="text-xs text-muted-foreground mb-4">AI-powered insights</p>
-        <div className="text-xs text-muted-foreground">Loading...</div>
-      </div>
-    )
+  const getCategoryIcon = (category: string) => {
+    switch (category.toLowerCase()) {
+      case "sports":
+      case "dining":
+      case "food":
+        return "alert"
+      case "subscriptions":
+      case "entertainment":
+        return "bulb"
+      default:
+        return "zap"
+    }
   }
 
-  if (loading) {
-    return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Zap className="w-5 h-5 text-purple-600" />
-          <h2 className="font-semibold text-foreground">Smart Suggestions</h2>
-        </div>
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="w-5 h-5 text-purple-600 animate-spin" />
-          <span className="ml-2 text-sm text-muted-foreground">Loading suggestions...</span>
-        </div>
-      </div>
-    )
+  const getIconComponent = (iconType?: string) => {
+    switch (iconType) {
+      case "alert":
+        return <AlertCircle className="w-4 h-4 text-red-500" />
+      case "bulb":
+        return <Lightbulb className="w-4 h-4 text-yellow-500" />
+      default:
+        return <Zap className="w-4 h-4 text-primary" />
+    }
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 hover:shadow-lg transition-all duration-300">
-      <div className="flex items-center gap-2 mb-2">
-        <Zap className="w-5 h-5 text-primary" />
-        <h2 className="font-semibold text-foreground">Smart Suggestions</h2>
-      </div>
-      <p className="text-xs text-muted-foreground mb-4">AI-powered insights</p>
-
-      <div className="space-y-3">
-        {displaySuggestions.map((suggestion, idx) => {
-          const getIcon = () => {
-            if (suggestion.category?.toLowerCase().includes("food") || suggestion.category?.toLowerCase().includes("dining")) {
-              return AlertCircle
-            }
-            if (Number(suggestion.potential_savings) > 100) {
-              return Zap
-            }
-            return Lightbulb
-          }
-          const SuggestionIcon = getIcon()
-          
-          return (
-            <Link
-              key={idx}
-              href="/dashboard/suggestions"
-              className="block p-4 bg-gradient-to-r from-muted/50 to-transparent rounded-lg hover:from-muted hover:shadow-md transition-all duration-200 group cursor-pointer border border-border/50"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600/10 to-indigo-600/10 flex items-center justify-center">
-                    <SuggestionIcon className="w-4 h-4 text-purple-600" />
-                  </div>
-                  <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">
-                    {suggestion.category || "General"}
-                  </span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-purple-600 transition-colors duration-200" />
-              </div>
-              <h3 className="font-semibold text-sm text-foreground mb-1">{suggestion.title}</h3>
-              <p className="text-xs text-muted-foreground mb-3">{suggestion.description}</p>
-              {Number(suggestion.potential_savings) > 0 && (
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-emerald-600">
-                    Save ₹{Number(suggestion.potential_savings).toFixed(2)}/month
-                  </span>
-                  <span className="text-xs text-muted-foreground">{suggestion.impact}</span>
-                </div>
-              )}
-            </Link>
-          )
-        })}
-      </div>
-      
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mt-2">
-          <div className="flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-xs font-medium text-red-900 mb-1">Error loading suggestions</p>
-              <p className="text-xs text-red-700">{error}</p>
-              <Link href="/dashboard/suggestions" className="text-xs text-red-600 underline mt-1 inline-block">
-                Try on full suggestions page →
-              </Link>
+    <div className="bg-white rounded-xl p-6 space-y-6">
+      <div className="flex justify-between items-start">
+        <div>
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+              <Zap className="w-6 h-6 text-orange-500" />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold">Smart Suggestions</h2>
+              <p className="text-sm text-muted-foreground">AI-powered personalized recommendations to optimize your finances</p>
             </div>
           </div>
+          <p className="text-xs text-muted-foreground mt-1">Last updated: {lastUpdated || "Never"}</p>
         </div>
-      )}
-      
-      {suggestions.length === 0 && !loading && transactions.length > 0 && travelGoal && (
-        <Link
-          href="/dashboard/suggestions"
-          className="block text-xs text-center text-primary hover:underline mt-2"
+        <button 
+          onClick={() => window.location.reload()}
+          className="flex items-center gap-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
         >
-          View all suggestions →
-        </Link>
-      )}
+          <RefreshCcw className="w-4 h-4" />
+          Refresh
+        </button>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <div className="p-4 bg-emerald-50 rounded-xl">
+          <h3 className="text-sm font-medium text-emerald-700 mb-1">Potential Monthly Savings</h3>
+          <p className="text-2xl font-bold text-emerald-700">₹{totalSavings.toFixed(2)}</p>
+          <p className="text-xs text-emerald-600">Annual savings: ₹{(totalSavings * 12).toFixed(2)}</p>
+        </div>
+        <div className="p-4 bg-gray-50 rounded-xl">
+          <h3 className="text-sm font-medium text-gray-600 mb-1">Active Suggestions</h3>
+          <p className="text-2xl font-bold text-gray-700">{activeCount}</p>
+          <p className="text-xs text-gray-500">{activeCount > 0 ? `${Math.min(activeCount, 2)} high priority` : "No active suggestions"}</p>
+        </div>
+        <div className="p-4 bg-gray-50 rounded-xl">
+          <h3 className="text-sm font-medium text-gray-600 mb-1">Dismissed</h3>
+          <p className="text-2xl font-bold text-gray-700">{dismissedCount}</p>
+          <p className="text-xs text-gray-500">You can review these anytime</p>
+        </div>
+        <div className="p-4 bg-gray-50 rounded-xl">
+          <h3 className="text-sm font-medium text-gray-600 mb-1">Implementation Status</h3>
+          <p className="text-2xl font-bold text-gray-700">{implementationProgress}</p>
+          <p className="text-xs text-gray-500">Suggestions acted upon</p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div>
+            <p className="text-sm text-muted-foreground mt-2">Analyzing your spending patterns...</p>
+          </div>
+        ) : suggestions.length > 0 ? (
+          suggestions.map((suggestion, idx) => (
+            <div
+              key={idx}
+              className="p-4 bg-white rounded-lg border border-gray-100 hover:border-orange-100 transition-all duration-200 group"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center mt-1">
+                    {getIconComponent(suggestion.icon)}
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">{suggestion.title}</h3>
+                    <p className="text-sm text-gray-600 mt-1">{suggestion.description}</p>
+                    <p className="text-xs text-gray-400 mt-2">{suggestion.category}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium text-emerald-600">Save ₹{suggestion.savings.toFixed(2)}</p>
+                  <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-sm text-muted-foreground">No suggestions yet. Start adding transactions to get personalized recommendations.</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

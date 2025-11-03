@@ -3,7 +3,7 @@
 import { Plane, MapPin, Calendar, Save, Edit2, DollarSign } from "lucide-react"
 import { useState, useMemo, useEffect } from "react"
 import { useFinixData } from "@/lib/data-context"
-import { generateTravelSuggestions } from "@/lib/utils"
+import { japanTravelSuggestions } from "@/lib/mock-travel-data"
 import type { TravelSuggestion } from "@/types/travel"
 
 interface BudgetCategory {
@@ -25,8 +25,7 @@ export default function TravelPage() {
   const { travelGoal, setTravelGoal, transactions } = useFinixData()
   const [showForm, setShowForm] = useState(!travelGoal)
   const [showBudgetForm, setShowBudgetForm] = useState(false)
-  const [suggestions, setSuggestions] = useState<TravelSuggestion[]>([])
-  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
+  const [suggestions] = useState<TravelSuggestion[]>(japanTravelSuggestions)
   const [formData, setFormData] = useState({
     name: travelGoal?.name || "",
     destination: travelGoal?.destination || "",
@@ -95,33 +94,7 @@ export default function TravelPage() {
     }))
   }, [budgetCategories, calculatedSpending])
 
-  // Fetch accommodation suggestions when travel goal or accommodation budget changes
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (!travelGoal?.destination) return;
-      
-      const budgets = budgetCategories.reduce((acc, cat) => {
-        acc[cat.category] = cat.budget;
-        return acc;
-      }, {} as Record<string, number>);
-
-      setIsLoadingSuggestions(true);
-      try {
-        const newSuggestions = await generateTravelSuggestions(travelGoal.destination, budgets);
-        setSuggestions(newSuggestions);
-      } catch (error) {
-        console.error("Failed to fetch suggestions:", error);
-        // Show a more user-friendly error if API key is missing
-        if (error instanceof Error && error.message.includes('API key')) {
-          alert('Please configure the Groq API key in your environment variables.');
-        }
-      } finally {
-        setIsLoadingSuggestions(false);
-      }
-    };
-
-    fetchSuggestions();
-  }, [travelGoal?.destination, budgetCategories]);
+  // Using static suggestions now, no need to fetch
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -448,11 +421,7 @@ export default function TravelPage() {
               <div className="relative">
                 <div className="overflow-x-auto pb-4 scrollbar-hide">
                   <div className="flex space-x-4">
-                    {isLoadingSuggestions ? (
-                      <div className="flex items-center justify-center w-full py-12">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-                      </div>
-                    ) : suggestions.length > 0 ? (
+                    {suggestions.length > 0 ? (
                       suggestions.map((suggestion, index) => (
                         <div
                           key={index}
